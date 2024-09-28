@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" href="./assets/logo.png">
+    <title>Spotify - Web Player: Music for everyone</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="main">
+        <div class="sidebar">
+            <div class="nav">
+                <div class="nav-option" id="nav-option-home">
+                    <i class="fa-solid fa-house"></i>
+                    <a href="/home">Home</a>
+                </div>
+                <div class="nav-option">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <a href="#">Search</a>
+                </div>
+            </div>
+            <div class="library">
+                <div class="options">
+                    <div class="lib-option nav-option">
+                        <img src="./assets/library_icon.png" alt="library_icon">
+                        <a href="#">Your library</a>
+                    </div>
+                    <div class="backdrop" id="backdrop"></div>
+
+<!-- AddSong form (Initially hidden) -->
+<div class="addsong" id="addSongForm">
+    <header style="color: white; text-align: center;">Upload Music</header>
+    <form action="/uploadSong" method="POST" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Music Title" required>
+        <input type="text" name="artist" placeholder="Artist Name" required>
+        <input type="file" name="musicFile" accept="audio/*" required>
+        <input type="submit" class="button" value="Upload">
+    </form> 
+</div>
+                    <div class="icons">
+                        <i class="fa-solid fa-plus" id="showFormBtn"></i>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+
+                    
+                </div>
+                <div class="lib-box">
+                    <div class="box">
+                        <p class="box-p1">Create your first playlist</p>
+                        <p class="box-p2">It's easy, we'll help you</p>
+                        <button class="badge">Create playlist</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="sticky-nav">
+                <div class="sticky-nav-icons">
+                    <img src="./assets/backward_icon.png" alt="backward_icon">
+                    <img src="./assets/forward_icon.png" class="hide" alt="forward_icon">
+                </div>
+                <div class="sticky-nav-options">
+                    <i class="fa-regular fa-user nav-item"></i>
+                    <span class="username-display"><%= username %></span>
+                </div>
+            </div>
+            <h2>Music List</h2>
+            <ul>
+                <% if (songs.length > 0) { %>
+                    <% songs.forEach(song => { %>
+                        <li>
+                            <p><%= song.title %> by <%= song.artist %></p>
+                            <audio controls>
+                                <source src="/uploads/<%= song.file_path %>" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                        </li>
+                    <% }) %>
+                <% } else { %>
+                    <li>No songs available</li>
+                <% } %>
+            </ul>
+        </div>
+        <div class="music-player">
+            <div class="album">
+                <img src="./assets/album_picture.jpeg" alt="album_picture">
+                <div class="name">
+                    <p class="album-title">Daylight</p>
+                    <p class="singer">David Kushner</p>
+                </div>
+                <img src="./assets/album_icon1.png" alt="album_icon1">
+                <img src="./assets/album_icon2.png" class="album_icon2" alt="album_icon2">
+            </div>
+            <div class="player">
+                <div class="player-controls">
+                    <img src="./assets/player_icon1.png" class="player-control-icon" alt="player-control-icon1">
+                    <img src="./assets/player_icon2.png" class="player-control-icon" alt="player-control-icon2">
+                    <img src="./assets/player_icon3.png" class="player-control-icon pause" alt="player-control-icon3">
+                    <img src="./assets/player_icon4.png" class="player-control-icon" alt="player-control-icon4">
+                    <img src="./assets/player_icon5.png" class="player-control-icon" alt="player-control-icon5">
+                </div>
+                <div class="playback-bar">
+                    <span class="current-time">00:00</span>
+                    <input type="range" min="0" max="100" aria-label="range" class="progress-bar" step="1">
+                    <span class="tot-time">3:33</span>
+                </div>
+            </div>
+            <div class="controls">
+                <img src="./assets/controls_icon1.png" class="controls_icon1 controld_icon"
+                    alt="controls_icon1">
+                <img src="./assets/controld_icon2.png" class="controls_icon2 controld_icon"
+                    alt="controld_icon2">
+                <img src="./assets/controls_icon3.png" class="controls_icon3 controld_icon"
+                    alt="controls_icon3">
+                <img src="./assets/controls_icon4.png" class="controls_icon4 controld_icon"
+                    alt="controls_icon4">
+                <div class="sound">
+                    <input type="range" min="0" max="100" aria-label="range" class="sound-bar" step="1">
+                    <img src="./assets/controls_icon5.png" class="controls_icon5" alt="controls_icon5">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript to toggle the form and backdrop
+        const showFormBtn = document.getElementById('showFormBtn');
+        const addSongForm = document.getElementById('addSongForm');
+        const backdrop = document.getElementById('backdrop');
+    
+        showFormBtn.addEventListener('click', () => {
+            addSongForm.classList.toggle('show');
+            backdrop.classList.toggle('show');  // Show the backdrop when the form is visible
+        });
+    
+        backdrop.addEventListener('click', () => {
+            addSongForm.classList.remove('show');
+            backdrop.classList.remove('show');  // Hide form and backdrop when clicking outside the form
+        });
+    </script>
+</body>
+
+</html>
