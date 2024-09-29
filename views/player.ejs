@@ -75,60 +75,37 @@
                 </div>
             </div>
             <h2>Music List</h2>
-            <ul>
-                <% if (songs.length > 0) { %>
-                    <% songs.forEach(song => { %>
-                        <li>
-                            <p><%= song.title %> by <%= song.artist %></p>
-                            <audio controls>
-                                <source src="/uploads/<%= song.file_path %>" type="audio/mpeg">
-                                Your browser does not support the audio element.
-                            </audio>
-                        </li>
-                    <% }) %>
-                <% } else { %>
-                    <li>No songs available</li>
-                <% } %>
-            </ul>
+            <div class="music-list">
+                <% songs.forEach(song => { %>
+                  <div class="song-item">
+                    <!-- Make the song title a clickable button/link -->
+                    <button class="song-button" 
+                            data-title="<%= song.title %>" 
+                            data-artist="<%= song.artist %>" 
+                            data-filepath="<%= song.file_path %>">
+                      <%= song.title %> - <%= song.artist %>
+                    </button>
+                  </div>
+                <% }) %>
+              </div>
+        </div>
+
         </div>
         <div class="music-player">
             <div class="album">
                 <img src="./assets/album_picture.jpeg" alt="album_picture">
                 <div class="name">
-                    <p class="album-title">Daylight</p>
-                    <p class="singer">David Kushner</p>
+                    <p class="album-title"></p>
+                    <p class="singer"></p>
                 </div>
                 <img src="./assets/album_icon1.png" alt="album_icon1">
                 <img src="./assets/album_icon2.png" class="album_icon2" alt="album_icon2">
             </div>
-            <div class="player">
-                <div class="player-controls">
-                    <img src="./assets/player_icon1.png" class="player-control-icon" alt="player-control-icon1">
-                    <img src="./assets/player_icon2.png" class="player-control-icon" alt="player-control-icon2">
-                    <img src="./assets/player_icon3.png" class="player-control-icon pause" alt="player-control-icon3">
-                    <img src="./assets/player_icon4.png" class="player-control-icon" alt="player-control-icon4">
-                    <img src="./assets/player_icon5.png" class="player-control-icon" alt="player-control-icon5">
-                </div>
-                <div class="playback-bar">
-                    <span class="current-time">00:00</span>
-                    <input type="range" min="0" max="100" aria-label="range" class="progress-bar" step="1">
-                    <span class="tot-time">3:33</span>
-                </div>
-            </div>
-            <div class="controls">
-                <img src="./assets/controls_icon1.png" class="controls_icon1 controld_icon"
-                    alt="controls_icon1">
-                <img src="./assets/controld_icon2.png" class="controls_icon2 controld_icon"
-                    alt="controld_icon2">
-                <img src="./assets/controls_icon3.png" class="controls_icon3 controld_icon"
-                    alt="controls_icon3">
-                <img src="./assets/controls_icon4.png" class="controls_icon4 controld_icon"
-                    alt="controls_icon4">
-                <div class="sound">
-                    <input type="range" min="0" max="100" aria-label="range" class="sound-bar" step="1">
-                    <img src="./assets/controls_icon5.png" class="controls_icon5" alt="controls_icon5">
-                </div>
-            </div>
+            <audio id="audio-player" controls>
+                <source id="audio-source" src="" type="audio/mpeg">
+                Your browser does not support the audio tag.
+              </audio>
+              
         </div>
     </div>
 
@@ -147,6 +124,27 @@
             addSongForm.classList.remove('show');
             backdrop.classList.remove('show');  // Hide form and backdrop when clicking outside the form
         });
+
+        const audioPlayer = document.getElementById('audio-player');
+  const audioSource = document.getElementById('audio-source');
+
+  // Get all song buttons
+  const songButtons = document.querySelectorAll('.song-button');
+
+  // Add event listeners to each song button
+  songButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Get the song file path from the button's data attribute
+      const filePath = this.getAttribute('data-filepath');
+
+      // Update the audio source to the selected song's file path
+      audioSource.src = filePath;
+
+      // Load the new song and play it
+      audioPlayer.load();
+      audioPlayer.play();
+    });
+  });
     </script>
 </body>
 

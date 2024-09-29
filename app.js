@@ -3,8 +3,10 @@ const bodyParser= require('body-parser');
 const routes = require('./routes/router.js');
 const session = require('express-session');
 const app = express();
+const path = require('path');
 
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 app.set('view engine', 'ejs');

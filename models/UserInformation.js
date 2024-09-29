@@ -29,19 +29,23 @@ const info = {
         });
     },
 
-    addSong: (title, artist, musicFile, callback) => {
-        const query = 'INSERT INTO songs (title, artist, file_path) VALUES (?, ?, ?)';
-        db.query(query, [title, artist, musicFile], (err, results) => {
-            if (err) return callback(err);
-            callback(null, results);
-        });
-    },
-
-    getAllSongs: (callback) => {
-        const query = 'SELECT * FROM songs';
+    fetchSongs: (callback) => {
+        const query = "SELECT * FROM songs";
         db.query(query, (err, results) => {
-            if (err) return callback(err);
-            callback(null, results);
+            if (err) {
+                console.error("Error fetching songs:", err);  // Log the error
+                return callback(err);
+            }
+    
+            // Check if there are any results and log them for debugging
+            if (results.length === 0) {
+                console.log("No songs found in the database.");
+            } else {
+                console.log("Songs fetched successfully:", results);
+            }
+    
+            // Return the results (or an empty array if no songs)
+            return callback(null, results);
         });
     }
 };

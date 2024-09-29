@@ -504,3 +504,47 @@ a {
 .show {
     display: block;
 }
+
+.music-list-container {
+    background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent white for card background */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+    margin: 20px; /* Margin around the card */
+}
+
+.music-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between song items */
+}
+
+.song-item {
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly lighter background for items */
+    border-radius: 8px;
+    padding: 10px; /* Padding inside each song item */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.song-item:hover {
+    background-color: rgba(255, 255, 255, 0.3); /* Change background on hover */
+}
+
+.song-button {
+    width: 100%;
+    background: none; /* Remove default button background */
+    border: none; /* Remove border */
+    color: white; /* Text color */
+    font-size: 16px; /* Font size */
+    text-align: left; /* Align text to the left */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+.song-button:focus {
+    outline: none; /* Remove focus outline */
+}
+
+audio{
+    width: 700px;
+    margin-right: 14em;
+}
