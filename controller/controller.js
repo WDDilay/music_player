@@ -18,23 +18,31 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const m = {
-    login: (req, res) => {
+    main: (req, res) => {
         res.render('logres');
     },
 
-    Musictify: (req, res) => {
+    login: (req, res) => {
         const { email, password } = req.body;
-        console.log("Session:", req.session);
+    console.log("Session:", req.session);
 
-        info.Musictify(email, password, (err, user) => {
-            if (err) throw err;
-            if (user) {
-                req.session.username = user.username;  
-                res.render('player', { username: user.username });
-            } else {
-                res.send('Invalid email or password');
-            }
-        });
+    info.login(email, password, (err, user) => {
+        if (err) throw err;
+        if (user) {
+            req.session.username = user.username;
+
+            // Now retrieve songs before rendering the player page
+            info.getAll((err, result) => {
+                if (err) throw err;
+                
+                // Pass both username and songs to the player view
+                res.render('player', { username: user.username, songs: result });  // Pass username here
+            });
+
+        } else {
+            res.send('Invalid email or password');
+        }
+    });
     },
 
     register: (req, res) => {
@@ -45,18 +53,15 @@ const m = {
         });
     },
 
-    home: (req, res) => {
-        const username = req.session.username || 'Guest';
-
-        // Fetch songs using the model
-        info.fetchSongs((err, songs) => {
-            if (err) {
-                console.error("Error fetching songs:", err);
-                return res.status(500).send("Server Error");
-            }
-
-            // Pass both 'username' and 'songs' to the player view// Debugging: Check if songs data is coming through
-            res.render('player', { username, songs });
+    musictify: (req, res) => {
+        info.getAll((err, result) => {
+            if (err) throw err;
+    
+            // Check if the username exists in the session
+            const username = req.session.username || 'Guest'; // Fallback to 'Guest' if not logged in
+    
+            // Pass both songs and username to the template
+            res.render('player', { songs: result, username: username });
         });
     },
 
@@ -81,10 +86,19 @@ const m = {
                 }
 
                 // Redirect or respond after successful upload and database insert
-                res.redirect('/home'); // Adjust as necessary
+                res.redirect('/musictify'); // Adjust as necessary
             });
         });
     },
+
+    deleteSong: (req, res) => {
+        const songID = req.params.song_id;
+
+        info.deleteSong(songID, (err, result) => {
+            if (err) throw err;
+            res.redirect('/musictify');  // After deletion, redirect back to the admin page
+        });
+    }
 
 };
 

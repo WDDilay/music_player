@@ -4,9 +4,13 @@ const info = {
         const query ="insert into users (username, email, password) values(?,?,?)";
         db.query(query, [data.username, data.email, data.password], callback);
     },
-
     
-    Musictify: (email, password, callback) => {
+    getAll: (callback) => {
+        const query = "SELECT * FROM songs";
+        db.query(query, callback);
+    },
+    
+    login: (email, password, callback) => {
         const query = "SELECT * FROM users WHERE email = ?";
         db.query(query, [email], (err, results) => {
             if (err) return callback(err);
@@ -16,12 +20,12 @@ const info = {
                 return callback(null, false);
             }
 
-            const user = results[0];
+            const users = results[0];
 
             // Check if the password matches (this is a simple plain-text comparison, but you should hash passwords)
-            if (user.password === password) {
+            if (users.password === password) {
                 // Password matches, return user data
-                return callback(null, user);
+                return callback(null, users);
             } else {
                 // Password doesn't match
                 return callback(null, false);
@@ -29,24 +33,10 @@ const info = {
         });
     },
 
-    fetchSongs: (callback) => {
-        const query = "SELECT * FROM songs";
-        db.query(query, (err, results) => {
-            if (err) {
-                console.error("Error fetching songs:", err);  // Log the error
-                return callback(err);
-            }
-    
-            // Check if there are any results and log them for debugging
-            if (results.length === 0) {
-                console.log("No songs found in the database.");
-            } else {
-                console.log("Songs fetched successfully:", results);
-            }
-    
-            // Return the results (or an empty array if no songs)
-            return callback(null, results);
-        });
+    deleteSong: (song_id, callback) => {
+        const query = "DELETE FROM songs WHERE song_id = ?";
+        db.query(query, [song_id], callback);
     }
+
 };
 module.exports = info;

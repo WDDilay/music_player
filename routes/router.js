@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
 const controller = require('../controller/controller.js');
 
 
 
 
-router.get('/', controller.login);
+router.get('/', controller.main);
 router.post('/register', controller.register);
 router.post('/uploadSong', controller.uploadSong);
-router.get('/home', controller.home);
+router.get('/Musictify', controller.musictify);
+router.post('/deleteSong/:song_id', controller.deleteSong);
 
-router.post('/Musictify', controller.Musictify);
+router.post('/login', controller.login);
 router.use((req, res, next) => {
     console.log("Session middleware in router:", req.session); 
     next();

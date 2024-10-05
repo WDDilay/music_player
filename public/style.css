@@ -548,3 +548,27 @@ audio{
     width: 700px;
     margin-right: 14em;
 }
+
+.delete-song-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: red;
+    font-size: 1.2rem;
+    margin-left: 60px; /* Add some space between the delete button and the song title */
+  }
+
+  .song-button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: left; /* Ensure the song title is aligned properly */
+    flex-grow: 1; /* Make the song button fill the remaining space */
+  }
+
+  .song-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
