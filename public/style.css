@@ -579,3 +579,10 @@ audio{
     object-fit: cover; /* Ensure the album cover maintains its aspect ratio */
     margin-right: 10px; /* Add some space between the image and the title */
   }
+
+  #player-album-cover{
+    width: 50px;  /* Adjust the width as needed */
+    height: 50px; /* Adjust the height as needed */
+    object-fit: cover; /* Ensure the album cover maintains its aspect ratio */
+    margin-right: 10px;
+  }

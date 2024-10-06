@@ -102,19 +102,30 @@
         </div>
         <div class="music-player">
             <div class="album">
-                <img src="./assets/album_picture.jpeg" alt="album_picture">
+                <img id="player-album-cover" src="./assets/album_picture.jpeg" alt="album_picture">
                 <div class="name">
-                    <p class="album-title"></p>
-                    <p class="singer"></p>
+                    <p id="player-song-title" class="album-title"></p> 
+                    <p id="player-artist-name" class="singer"></p>      
                 </div>
-                <img src="./assets/album_icon1.png" alt="album_icon1">
-                <img src="./assets/album_icon2.png" class="album_icon2" alt="album_icon2">
+            </div>
+            <div class="controls">
+                
+                <button id="prev-song" class="control-button">
+                    <i class="fa-solid fa-backward"></i>
+                </button>
+        
+                
+        
+                <!-- Next Button -->
+                <button id="next-song" class="control-button">
+                    <i class="fa-solid fa-forward"></i>
+                </button>
             </div>
             <audio id="audio-player" controls>
                 <source id="audio-source" src="" type="audio/mpeg">
                 Your browser does not support the audio tag.
-              </audio>
-              
+            </audio>
+
         </div>
     </div>
 
@@ -123,6 +134,7 @@
         const showFormBtn = document.getElementById('showFormBtn');
         const addSongForm = document.getElementById('addSongForm');
         const backdrop = document.getElementById('backdrop');
+        
     
         showFormBtn.addEventListener('click', () => {
             addSongForm.classList.toggle('show');
@@ -135,25 +147,71 @@
         });
 
         const audioPlayer = document.getElementById('audio-player');
-  const audioSource = document.getElementById('audio-source');
+const audioSource = document.getElementById('audio-source');
+const playerSongTitle = document.getElementById('player-song-title');
+const playerArtistName = document.getElementById('player-artist-name');
+const playerAlbumCover = document.getElementById('player-album-cover');
+const prevSongButton = document.getElementById('prev-song');
+const nextSongButton = document.getElementById('next-song');
 
-  // Get all song buttons
-  const songButtons = document.querySelectorAll('.song-button');
+// Get all song buttons
+const songButtons = document.querySelectorAll('.song-button');
 
-  // Add event listeners to each song button
-  songButtons.forEach(button => {
-    button.addEventListener('click', function() {
-      // Get the song file path from the button's data attribute
-      const filePath = this.getAttribute('data-filepath');
+// Variable to keep track of the current song index
+let currentSongIndex = 0;
 
-      // Update the audio source to the selected song's file path
-      audioSource.src = filePath;
+// Helper function to load and play a song
+function loadSong(songIndex) {
+    const button = songButtons[songIndex];
+    
+    const filePath = button.getAttribute('data-filepath');
+    const songTitle = button.getAttribute('data-title');
+    const songArtist = button.getAttribute('data-artist');
+    const albumCover = button.previousElementSibling.src;  // Assuming album cover is just before the button
 
-      // Load the new song and play it
-      audioPlayer.load();
-      audioPlayer.play();
+    audioSource.src = filePath;
+    playerSongTitle.textContent = songTitle;
+    playerArtistName.textContent = songArtist;
+    playerAlbumCover.src = albumCover;
+
+    audioPlayer.load();
+}
+
+// Play the first song on page load (if desired)
+if (songButtons.length > 0) {
+    loadSong(currentSongIndex);
+}
+
+// Add event listeners to each song button
+songButtons.forEach((button, index) => {
+    button.addEventListener('click', function () {
+        currentSongIndex = index;
+        loadSong(currentSongIndex);
+        audioPlayer.play();  // Play the song after loading
     });
-  });
+});
+
+// Next song button functionality
+nextSongButton.addEventListener('click', () => {
+    currentSongIndex = (currentSongIndex + 1) % songButtons.length;  // Loop back to the first song
+    loadSong(currentSongIndex);
+    audioPlayer.play();  // Play the new song
+});
+
+// Previous song button functionality
+prevSongButton.addEventListener('click', () => {
+    currentSongIndex = (currentSongIndex - 1 + songButtons.length) % songButtons.length;  // Loop back to the last song
+    loadSong(currentSongIndex);
+    audioPlayer.play();  // Play the new song
+});
+
+// Automatically move to the next song when the current one ends
+audioPlayer.addEventListener('ended', () => {
+    currentSongIndex = (currentSongIndex + 1) % songButtons.length;  // Loop back to the first song
+    loadSong(currentSongIndex);
+    audioPlayer.play();  // Play the next song
+});
+
     </script>
 </body>
 
