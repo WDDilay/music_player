@@ -6,14 +6,18 @@ const multer = require('multer');
 // Configure multer storage to retain original file name
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        const uploadPath = path.join(__dirname, '../uploads'); // Change path as needed
+        let uploadPath = path.join(__dirname, '../uploads');
+        
+        if (file.fieldname === 'album') {
+            uploadPath = path.join(__dirname, '../uploads/album');
+        }
+        
         cb(null, uploadPath);
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname); // Retain original file name
     }
 });
-
 
 const upload = multer({ storage: storage });
 
@@ -67,29 +71,35 @@ const m = {
 
 
     uploadSong: (req, res) => {
-        upload.single('musicFile')(req, res, function (err) {
+        // Use 'fields' to handle multiple files with different names
+        upload.fields([
+            { name: 'musicFile', maxCount: 1 },
+            { name: 'album', maxCount: 1 }
+        ])(req, res, function (err) {
             if (err) {
                 console.error("Error uploading file:", err);
                 return res.status(500).send("Error uploading file");
             }
-
+    
             // Extract form data (title, artist) and uploaded file information
             const { title, artist } = req.body;
-            const filePath = path.join('/uploads', req.file.originalname); // Relative file path to store in DB
-
+            const musicFilePath = path.join('/uploads', req.files['musicFile'][0].originalname); // Music file path
+            const albumFilePath = path.join('/uploads/album', req.files['album'][0].originalname); // Album cover path
+    
             // Insert song metadata into the database
-            const query = "INSERT INTO songs (title, artist, file_path) VALUES (?, ?, ?)";
-            db.query(query, [title, artist, filePath], (err) => {
+            const query = "INSERT INTO songs (title, artist, file_path, album) VALUES (?, ?, ?, ?)";
+            db.query(query, [title, artist, musicFilePath, albumFilePath], (err) => {
                 if (err) {
                     console.error("Error saving song data to database:", err);
                     return res.status(500).send("Error saving song data");
                 }
-
+    
                 // Redirect or respond after successful upload and database insert
                 res.redirect('/musictify'); // Adjust as necessary
             });
         });
     },
+    
 
     deleteSong: (req, res) => {
         const songID = req.params.song_id;
