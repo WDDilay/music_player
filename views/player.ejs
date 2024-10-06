@@ -37,7 +37,7 @@
                     </div>
                     <div class="backdrop" id="backdrop"></div>
 
-<!-- AddSong form (Initially hidden) -->
+
 <div class="addsong" id="addSongForm">
     <header style="color: white; text-align: center;">Upload Music</header>
     <form action="/uploadSong" method="POST" enctype="multipart/form-data">
@@ -50,7 +50,6 @@
 </div>
                     <div class="icons">
                         <i class="fa-solid fa-plus" id="showFormBtn"></i>
-                        <i class="fa-solid fa-arrow-right"></i>
                     </div>
 
                     
@@ -81,7 +80,6 @@
                     
                   <div class="song-item">
                     <img class="album-cover" src="<%= s.album %>" alt="Album Cover for <%= s.title %>" />
-                    <!-- Make the song title a clickable button/link -->
                     <button class="song-button" 
                             data-title="<%= s.title %>" 
                             data-artist="<%= s.artist %>" 
@@ -113,10 +111,6 @@
                 <button id="prev-song" class="control-button">
                     <i class="fa-solid fa-backward"></i>
                 </button>
-        
-                
-        
-                <!-- Next Button -->
                 <button id="next-song" class="control-button">
                     <i class="fa-solid fa-forward"></i>
                 </button>
@@ -130,7 +124,7 @@
     </div>
 
     <script>
-        // JavaScript to toggle the form and backdrop
+        
         const showFormBtn = document.getElementById('showFormBtn');
         const addSongForm = document.getElementById('addSongForm');
         const backdrop = document.getElementById('backdrop');
@@ -138,12 +132,12 @@
     
         showFormBtn.addEventListener('click', () => {
             addSongForm.classList.toggle('show');
-            backdrop.classList.toggle('show');  // Show the backdrop when the form is visible
+            backdrop.classList.toggle('show'); 
         });
     
         backdrop.addEventListener('click', () => {
             addSongForm.classList.remove('show');
-            backdrop.classList.remove('show');  // Hide form and backdrop when clicking outside the form
+            backdrop.classList.remove('show');  
         });
 
         const audioPlayer = document.getElementById('audio-player');
@@ -154,20 +148,20 @@ const playerAlbumCover = document.getElementById('player-album-cover');
 const prevSongButton = document.getElementById('prev-song');
 const nextSongButton = document.getElementById('next-song');
 
-// Get all song buttons
+
 const songButtons = document.querySelectorAll('.song-button');
 
-// Variable to keep track of the current song index
+
 let currentSongIndex = 0;
 
-// Helper function to load and play a song
+
 function loadSong(songIndex) {
     const button = songButtons[songIndex];
     
     const filePath = button.getAttribute('data-filepath');
     const songTitle = button.getAttribute('data-title');
     const songArtist = button.getAttribute('data-artist');
-    const albumCover = button.previousElementSibling.src;  // Assuming album cover is just before the button
+    const albumCover = button.previousElementSibling.src;  
 
     audioSource.src = filePath;
     playerSongTitle.textContent = songTitle;
@@ -177,39 +171,39 @@ function loadSong(songIndex) {
     audioPlayer.load();
 }
 
-// Play the first song on page load (if desired)
+
 if (songButtons.length > 0) {
     loadSong(currentSongIndex);
 }
 
-// Add event listeners to each song button
+
 songButtons.forEach((button, index) => {
     button.addEventListener('click', function () {
         currentSongIndex = index;
         loadSong(currentSongIndex);
-        audioPlayer.play();  // Play the song after loading
+        audioPlayer.play();  
     });
 });
 
-// Next song button functionality
+
 nextSongButton.addEventListener('click', () => {
-    currentSongIndex = (currentSongIndex + 1) % songButtons.length;  // Loop back to the first song
+    currentSongIndex = (currentSongIndex + 1) % songButtons.length;  
     loadSong(currentSongIndex);
-    audioPlayer.play();  // Play the new song
+    audioPlayer.play();  
 });
 
-// Previous song button functionality
+
 prevSongButton.addEventListener('click', () => {
-    currentSongIndex = (currentSongIndex - 1 + songButtons.length) % songButtons.length;  // Loop back to the last song
+    currentSongIndex = (currentSongIndex - 1 + songButtons.length) % songButtons.length; 
     loadSong(currentSongIndex);
-    audioPlayer.play();  // Play the new song
+    audioPlayer.play();  
 });
 
-// Automatically move to the next song when the current one ends
+
 audioPlayer.addEventListener('ended', () => {
-    currentSongIndex = (currentSongIndex + 1) % songButtons.length;  // Loop back to the first song
+    currentSongIndex = (currentSongIndex + 1) % songButtons.length;  
     loadSong(currentSongIndex);
-    audioPlayer.play();  // Play the next song
+    audioPlayer.play();  
 });
 
     </script>
